@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/tone/14.4.9/Tone.js'></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <img class="play-header-logo" src="/media/umix logo.png">
+    <button class="play-submit-button">SUBMIT</button>
+    <div class="play-header-container"> 
+    </div>
+    <div class="play-bar-container">
+    </div>
+    <div class="play-melody">
+        <p class="play-melody-text">Melody</p>
+    </div>
+    <div class="play-harmony">
+        <p class="play-harmony-text">Harmony</p>
+    </div>
+    <div class="play-bass">
+        <p class="play-bass-text">Bass</p>
+    </div>
+    <div class="play-beats">
+        <p class="play-beats-text">Beats</p>
+    </div>
+    <div class="play-measure-1-label">
+        <p class="play-measure-1-text">1</p>
+    </div>
+    <div class="play-measure-2-label">
+        <p class="play-measure-2-text">2</p>
+    </div>
+    <div class="play-measure-3-label">
+        <p class="play-measure-3-text">3</p>
+    </div>
+    <div class="play-measure-4-label">
+        <p class="play-measure-4-text">4</p>
+    </div>
+    <div class="mix-area"></div>
+    <div id='keyboard'></div>
+    <script>
+        var kick = new Tone.MembraneSynth().toMaster();
+        var crash = new Tone.MetalSynth().toMaster();
+        var synth = new Tone.PolySynth().toMaster();
+        var notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']; 
+        var html = "";
+        
+        //keyboard start
+        for(var octave = 0; octave < 2; octave++){
+            for(var i = 0; i < notes.length; i++){
+                var hasSharp = true;
+                var note = notes[i];
+
+                if(note == 'E' || note == 'B')
+                    hasSharp = false;
+                    html += `<div class='whitenote' 
+                    onmousedown='noteDown(this, false)' 
+                    onmouseup='noteUp(this, false)'
+                    onkeydown='noteDown(this, false)' 
+                    onkeyup='noteUp(this, false)'
+                    onmouseleave='noteUp(this, false)'
+                    data-note='${note + (octave+4)}'>`;
+
+                if(hasSharp){
+                    html += `<div class='blacknote' 
+                    onmousedown='noteDown(this, true)'
+                    onmouseup='noteUp(this, true)'
+                    onkeydown='noteDown(this, true)'
+                    onkeyup='noteUp(this, true)'
+                    onmouseleave='noteUp(this, true)'
+                    data-note='${note + '#' + (octave+4)}'></div>`;
+                }
+
+                html += '</div>';
+            }
+        }
+
+        document.getElementById('keyboard').innerHTML = html;
+
+        function noteUp(elem, isSharp){
+            elem.style.background = isSharp ? '#BF511C' : 'white';
+        }
+
+        function noteDown(elem, isSharp){
+            var note = elem.dataset.note;
+            //alert(note);
+            elem.style.background = isSharp ? '#F26522' : '#F26522';
+            synth.triggerAttackRelease(note, "16n");
+            event.stopPropagation();
+        }
+
+        //keyboard end
+
+        //hotkey start
+        window.addEventListener("keydown", checkKeyPress, false);
+        function checkKeyPress(key){
+            if (key.keyCode == "90"){
+                note = 'C4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "83"){
+                note = 'C#4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "88"){
+                note = 'D4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "68"){
+                note = 'D#4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "67"){
+                note = 'E4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "86"){
+                note = 'F4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "71"){
+                note = 'F#4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "66"){
+                note = 'G4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "72"){
+                note = 'G#4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "78"){
+                note = 'A4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "74"){
+                note = 'A#4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "77"){
+                note = 'B4';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "188"){
+                note = 'C5';
+                synth.triggerAttackRelease(note, "16n");
+            }else if (key.keyCode == "103"){
+                crash.triggerAttackRelease("8n", 0.05);
+            }else if (key.keyCode == "104"){
+                crash.triggerAttackRelease("c4", "8n");
+            }else if (key.keyCode == "105"){
+                crash.triggerAttackRelease("c9", "8n");
+            }else if (key.keyCode == "100"){
+                kick.triggerAttackRelease("c4", "8n");
+            }else if (key.keyCode == "101"){
+                kick.triggerAttackRelease("c5", "8n");
+            }else if (key.keyCode == "102"){
+                kick.triggerAttackRelease("c6", "8n");
+            }else if (key.keyCode == "97"){
+                kick.triggerAttackRelease("c0", "8n");
+            }else if (key.keyCode == "98"){
+                kick.triggerAttackRelease("c1", 0.05);
+            }else if (key.keyCode == "99"){
+                kick.triggerAttackRelease("c2", "8n");
+            }
+        }
+
+        //hotkey end
+
+        //drum kit start
+
+        function button1(){
+            crash.triggerAttackRelease("8n", 0.05);
+        }
+        function button2(){
+            crash.triggerAttackRelease("c4", "8n");
+        }
+        function button3(){
+            crash.triggerAttackRelease("c9", "8n");
+        }
+        function button4(){
+            kick.triggerAttackRelease("c4", "8n");
+        }
+        function button5(){
+            kick.triggerAttackRelease("c5", "8n");
+        }
+        function button6(){
+            kick.triggerAttackRelease("c6", "8n");
+        }
+        function button7(){
+            kick.triggerAttackRelease("c0", "8n");
+        }
+        function button8(){
+            kick.triggerAttackRelease("c1", 0.05);
+        }
+        function button9(){
+            kick.triggerAttackRelease("c2", "8n");
+        }
+
+        //drumkit end
+    </script>
+    <div class="keyboard-box"></div>
+    <div class="play-footer"></div>
+    <div class="beatmaker-box">
+        <button class="beatbutton1" onclick="button1()"></button>
+        <button class="beatbutton2" onclick="button2()"></button>
+        <button class="beatbutton3" onclick="button3()"></button>
+        <button class="beatbutton4" onclick="button4()"></button>
+        <button class="beatbutton5" onclick="button5()"></button>
+        <button class="beatbutton6" onclick="button6()"></button>
+        <button class="beatbutton7" onclick="button7()"></button>
+        <button class="beatbutton8" onclick="button8()"></button>
+        <button class="beatbutton9" onclick="button9()"></button>
+    </div>
+</body>
+</html>
